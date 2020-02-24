@@ -4,9 +4,8 @@ import App from './App.vue'
 import router from './router/index'
 //导入element
 import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import 'jquery/dist/jquery.min'
-import 'bootstrap/dist/css/bootstrap.css'
+import  'element-ui/lib/theme-chalk/index.css'
+
 
 
 // 导入全局样式

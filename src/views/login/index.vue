@@ -21,7 +21,7 @@
                           <el-input v-model="ruleForm.code" prefix-icon="el-icon-lock" placeholder="请输入验证码"></el-input>
                       </el-col>
                       <el-col :span='7'>
-                          <img src="./images/login_captcha.png" alt="" class="code">
+                          <img :src="imgUrl" alt="" class="code">
                       </el-col>
                   </el-row>
 
@@ -32,18 +32,27 @@
             </el-form-item>
             <el-form-item>
                  <el-button type="primary" class="box-btn" @click="submitForm('ruleForm')">登录</el-button>
-                 <el-button type="primary" class="box-btn">注册</el-button>
+                 <el-button type="primary" class="box-btn" @click="showReg">注册</el-button>
             </el-form-item>
        </el-form>
        
+       
     </div>
+    <register ref="reg"></register>
     <img src="./images/login_banner_ele.png" alt class="img" />
   </div>
 </template>
 <script>
+import { login } from '@/api/login.js'
+import register from './components/register.vue'
+import {setToken} from '@/utilis/token.js'
 export default {
+  components:{
+        register
+  },
     data() {
         return {
+           imgUrl: process.env.VUE_APP_URL + "/captcha?type=login",
             ruleForm:{
                 name:'',
                 pass:'',
@@ -52,12 +61,12 @@ export default {
             },
              rules: {
           name: [
-            { required: true, message: '请输入手机号', trigger: 'blur' },
-            // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+             { required: true, message: '手机号不能为空', trigger: 'blur' },
+            {pattern: /0?(13|14|15|18|17)[0-9]{9}/,message: '手机格式不对', trigger: 'change' }
           ],
            pass: [
             { required: true, message: '请输入密码', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
           ],
            code: [
             { min: 4, max: 4, required: true, message: '请输入4位验证码', trigger: 'blur' }
@@ -70,15 +79,32 @@ export default {
     }
     },
     methods: {
-     submitForm(formName) {
+   submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
+            // alert('submit!');
+            login({
+              phone:this.ruleForm.name,
+              password:this.ruleForm.pass,
+              code:this.ruleForm.code
+
+            }).then(res=>{
+              console.log(res)
+              if(res.data.code==200){
+                //  window.localStorage.setItem('token',res.data.data.token)
+                setToken(res.data.data.token)
+              this.$message.success('登录成功')
+              this.$router.push('/index');
+              }else{
+                 this.$message.error(res.data.message)
+              }
+            })
           }
-        });
+        })
+   },
+    
+    showReg(){
+      this.$refs.reg.dialogFormVisible=true
     }
     }
 };
