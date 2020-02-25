@@ -78,7 +78,9 @@ export default {
         }
     }
     },
+   
     methods: {
+    
       getImg(){
 this.imgUrl=process.env.VUE_APP_URL + "/captcha?type=login&tt="+new Date();
       },

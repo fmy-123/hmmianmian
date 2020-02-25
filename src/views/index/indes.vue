@@ -51,6 +51,7 @@
 import {info} from "@/api/index.js"
 import {logout} from '@/api/index.js'
 import {removeToken} from '@/utilis/token.js'
+import {getToken} from '@/utilis/token.js'
 export default {
     data() {
         return {
@@ -80,11 +81,24 @@ export default {
         },
        
     },
+    beforeCreate() {
+      if(getToken()==null){
+        this.$message.error('请登录')
+        this.$router.push('/login')
+      }
+    },
     created() {
         info().then(res=>{
             console.log(res);
-            this.username=res.data.data.username;
+            if(res.data.code==200){
+              this.username=res.data.data.username;
             this.avatar=process.env.VUE_APP_URL +'/'+res.data.data.avatar
+            }else if(res.data.code==206){
+               this.$message.error('登录异常请重新登录');
+               removeToken();
+               this.$router.push('/login')
+            }
+            
         }).catch(err=>{
             console.log(err)
         })

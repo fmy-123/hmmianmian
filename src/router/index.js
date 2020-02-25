@@ -18,6 +18,7 @@ const router = new VueRouter({
         {
             path:'/login',
             component:login,
+            meta:{title:'登录'}
             
         },
         {
@@ -39,15 +40,15 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     NProgress.start();
-    if(to.path=='/indes'){
-        next('/indes/chart')
-    }else{
+   
         next()
-    }
+  
    
    
   })
-  router.afterEach(()=>{
+  router.afterEach((to)=>{
+    document.title=to.meta.title;
     NProgress.done();
+   
   })
 export default router
