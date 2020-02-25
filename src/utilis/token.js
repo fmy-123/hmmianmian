@@ -7,9 +7,9 @@ export function getToken(){
 }
 //
 export function setToken(token){
-    return window.localStorage.setItem(TOKENKEY,token)
+    window.localStorage.setItem(TOKENKEY,token)
 }
 
 export function removeToken(){
-    return window.localStorage.removeItem(TOKENKEY)
+    window.localStorage.removeItem(TOKENKEY)
 }

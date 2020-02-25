@@ -21,7 +21,7 @@
                           <el-input v-model="ruleForm.code" prefix-icon="el-icon-lock" placeholder="请输入验证码"></el-input>
                       </el-col>
                       <el-col :span='7'>
-                          <img :src="imgUrl" alt="" class="code">
+                          <img :src="imgUrl" alt="" class="code" @click="getImg">
                       </el-col>
                   </el-row>
 
@@ -54,9 +54,9 @@ export default {
         return {
            imgUrl: process.env.VUE_APP_URL + "/captcha?type=login",
             ruleForm:{
-                name:'',
-                pass:'',
-                agree:false,
+                name:'18511111111',
+                pass:'12345678',
+                agree:true,
                 code:''
             },
              rules: {
@@ -79,6 +79,9 @@ export default {
     }
     },
     methods: {
+      getImg(){
+this.imgUrl=process.env.VUE_APP_URL + "/captcha?type=login&tt="+new Date();
+      },
    submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -94,7 +97,8 @@ export default {
                 //  window.localStorage.setItem('token',res.data.data.token)
                 setToken(res.data.data.token)
               this.$message.success('登录成功')
-              this.$router.push('/index');
+              this.$router.push('/indes');
+              // this.$router.push('/index');
               }else{
                  this.$message.error(res.data.message)
               }
